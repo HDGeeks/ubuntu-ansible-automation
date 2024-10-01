@@ -1,0 +1,27 @@
+---
+- name: Setup Ubuntu Server with UFW and other packages
+  hosts: azure
+  become: true
+  tasks:
+    
+    - name: Update apt and install required system packages
+      apt:
+        name:
+          - curl
+          - vim
+          - git
+          - ufw
+        state: latest
+        update_cache: true
+
+    - name: Enable UFW and allow OpenSSH
+      ufw:
+        rule: allow
+        name: 'OpenSSH'
+      become: true
+
+    - name: Enable UFW with default deny
+      ufw:
+        state: enabled
+        default: deny
+      become: true

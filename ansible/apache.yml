@@ -1,0 +1,96 @@
+# @format
+---
+- name: Install and Configure Apache (httpd) on Ubuntu
+  hosts: azure
+  become: true # Enables sudo (privilege escalation) for all tasks
+  tasks:
+    - name: Update apt cache
+      apt:
+        update_cache: yes
+
+    - name: Install Apache (httpd)
+      apt:
+        name: apache2
+        state: present
+
+    - name: Start and enable Apache service
+      service:
+        name: apache2
+        state: started
+        enabled: true
+
+    - name: Remove existing index.html if it exists
+      file:
+        path: /var/www/html/index.html
+        state: absent
+
+    - name: Create a custom index.html with a fancy welcome message and set owner to root
+      copy:
+        dest: /var/www/html/index.html
+        owner: root
+        group: root
+        mode: "0644"
+        content: |
+          <!DOCTYPE html>
+          <html lang="en">
+          <head>
+              <meta charset="UTF-8">
+              <meta name="viewport" content="width=device-width, initial-scale=1.0">
+              <meta http-equiv="X-UA-Compatible" content="ie=edge">
+              <title>Welcome to Apache Server</title>
+              <style>
+                  body {
+                      font-family: Arial, sans-serif;
+                      background-color: #282c34;
+                      color: #61dafb;
+                      display: flex;
+                      justify-content: center;
+                      align-items: center;
+                      height: 100vh;
+                      margin: 0;
+                  }
+                  h1 {
+                      font-size: 3em;
+                  }
+                  p {
+                      font-size: 1.5em;
+                  }
+              </style>
+          </head>
+          <body>
+              <h1>Welcome to Your Apache Server!</h1>
+              <p>Enjoy your custom welcome page.</p>
+          </body>
+          </html>
+
+          
+
+    - name: Ensure UFW is enabled and deny by default
+      community.general.ufw:
+        state: enabled
+        default: deny
+      become: true
+
+    - name: UFW - Allow SSH connections
+      community.general.ufw:
+        rule: allow
+        name: OpenSSH
+      become: true
+
+    - name: Allow HTTP traffic through UFW firewall
+      community.general.ufw:
+        rule: allow
+        name: "Apache"
+      become: true
+
+    - name: Allow HTTP traffic on port 80
+      community.general.ufw:
+        rule: allow
+        port: 80
+        proto: tcp
+      become: true
+
+    - name: Ensure UFW status is enabled
+      community.general.ufw:
+        state: enabled
+      become: true
