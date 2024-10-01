@@ -1,0 +1,16 @@
+version: '3.8'
+
+services:
+  ubuntu-container-1:
+    build: .
+    container_name: ubuntu-container-1
+    ports:
+      - "2222:22"  # Map local port 2222 to the container's SSH port
+    networks:
+      - ubuntu-network
+    volumes:
+      - ./data:/data  # Optional: Mount a local folder to the container
+
+networks:
+  ubuntu-network:
+    driver: bridge
