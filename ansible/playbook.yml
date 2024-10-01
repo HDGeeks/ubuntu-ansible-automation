@@ -1,8 +1,8 @@
 ---
 - hosts: all
   become: true               # Enables sudo for all tasks
-  # become_method: sudo        # Use sudo for privilege escalation
-  # become_user: root         # Default user for sudo
+   
+         # Default user for sudo
   vars:
     ansible_sudo_password: "password"
 
