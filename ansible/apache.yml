@@ -1,7 +1,7 @@
 # @format
 ---
 - name: Install and Configure Apache (httpd) on Ubuntu
-  hosts: azure
+  hosts: ubuntu-container-1
   become: true # Enables sudo (privilege escalation) for all tasks
   tasks:
     - name: Update apt cache

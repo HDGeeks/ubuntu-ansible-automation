@@ -1,6 +1,6 @@
 ---
 - name: Setup Ubuntu Server with UFW and other packages
-  hosts: azure
+  hosts: ubuntu-container-1
   become: true
   tasks:
     
